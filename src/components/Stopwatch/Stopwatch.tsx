@@ -1,23 +1,31 @@
 import { useState, useEffect, useRef } from "react";
+import { formatTime } from "../../utils/timeFormatter";
+import { StopwatchProps } from "../../types/types";
 import "./style.css";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { VscDebugRestart } from "react-icons/vsc";
 import { MdDeleteOutline } from "react-icons/md";
 
-function Stopwatch({ id, onDelete }) {
-  const [time, setTime] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef(null);
+const Stopwatch: React.FC<StopwatchProps> = ({ id, onDelete }) => {
+  const [time, setTime] = useState<number>(0);
+  const { hours, minutes, seconds, milliseconds } = formatTime(time);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isRunning) {
       timerRef.current = setInterval(() => {
         setTime((prev) => prev + 10);
       }, 10);
-    } else {
+    } else if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-    return () => clearInterval(timerRef.current);
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [isRunning]);
 
   const start = () => setIsRunning(true);
@@ -26,11 +34,6 @@ function Stopwatch({ id, onDelete }) {
     setIsRunning(false);
     setTime(0);
   };
-
-  const hours = String(Math.floor(time / 3600000)).padStart(2, "0");
-  const minutes = String(Math.floor((time % 3600000) / 60000)).padStart(2, "0");
-  const seconds = String(Math.floor((time % 60000) / 1000)).padStart(2, "0");
-  const milliseconds = String(time % 1000).padStart(3, "0");
 
   return (
     <div className="stopwatch">
@@ -43,8 +46,8 @@ function Stopwatch({ id, onDelete }) {
             <CiPlay1 />
           </button>
         ) : (
-          <button onClick={pause}>
-            <CiPause1 title="Pause" />
+          <button onClick={pause} title="Pause">
+            <CiPause1 />
           </button>
         )}
         <button onClick={clear} title="Restart">
@@ -56,6 +59,6 @@ function Stopwatch({ id, onDelete }) {
       </div>
     </div>
   );
-}
+};
 
 export default Stopwatch;

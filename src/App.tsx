@@ -1,16 +1,17 @@
 import { useState } from "react";
 import Stopwatch from "./components/Stopwatch/Stopwatch";
 import "./App.css";
+import { StopwatchData } from "./types/types";
 
 export default function App() {
-  const [stopwatches, setStopwatches] = useState([]);
+  const [stopwatches, setStopwatches] = useState<StopwatchData[]>([]);
 
   const addStopwatch = () => {
-    setStopwatches([...stopwatches, { id: Date.now() }]);
+    setStopwatches((prev) => [...prev, { id: Date.now() }]);
   };
 
-  const deleteStopwatch = (id) => {
-    setStopwatches(stopwatches.filter((s) => s.id !== id));
+  const deleteStopwatch = (id: number) => {
+    setStopwatches((prev) => prev.filter((s) => s.id !== id));
   };
 
   return (
