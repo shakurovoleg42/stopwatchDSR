@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { formatTime } from "../../utils/timeFormatter";
 import { StopwatchProps } from "../../types/types";
 import "./style.css";
@@ -6,7 +6,9 @@ import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { VscDebugRestart } from "react-icons/vsc";
 import { MdDeleteOutline } from "react-icons/md";
 
-const Stopwatch: React.FC<StopwatchProps> = ({ id, onDelete }) => {
+const Stopwatch: React.FC<StopwatchProps> = memo(({ id, onDelete }) => {
+  console.log("Stopwatch re-rendered");
+
   const [time, setTime] = useState<number>(0);
   const { hours, minutes, seconds, milliseconds } = formatTime(time);
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -59,6 +61,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({ id, onDelete }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Stopwatch;

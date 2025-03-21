@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Stopwatch from "./components/Stopwatch/Stopwatch";
 import "./App.css";
 import { StopwatchData } from "./types/types";
@@ -10,9 +10,9 @@ export default function App() {
     setStopwatches((prev) => [...prev, { id: Date.now() }]);
   };
 
-  const deleteStopwatch = (id: number) => {
+  const deleteStopwatch = useCallback((id: number) => {
     setStopwatches((prev) => prev.filter((s) => s.id !== id));
-  };
+  }, []);
 
   return (
     <div className="app">
